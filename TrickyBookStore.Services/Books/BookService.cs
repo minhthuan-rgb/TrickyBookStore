@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TrickyBookStore.Models;
 
 namespace TrickyBookStore.Services.Books
@@ -8,7 +8,7 @@ namespace TrickyBookStore.Services.Books
     {
         public IList<Book> GetBooks(params long[] ids)
         {
-            return (IList<Book>)Store.Books.Data;
+            return Store.Books.Data.Where(b => ids.Contains(b.Id)).Select(b => b).ToList();
         }
     }
 }

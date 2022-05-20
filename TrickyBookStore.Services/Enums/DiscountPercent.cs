@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace TrickyBookStore.Services.Enums
 {
-    public enum SubscriptionPriority
+    public enum DiscountPercent
     {
-        Premium = 1,
-        CategoryAddicted = 2,
-        Paid = 3,
-        Free = 4
+        Premium = 15,
+        CategoryAddicted = 15,
+        Paid = 5,
+        Free = 10,
+        NoDiscount = 0,
+        FreeOfCharge = 100
     }
 }

@@ -9,8 +9,6 @@ namespace TrickyBookStore.Services.Payment
     {
         double GetPaymentAmount(long customerId, DateTimeOffset fromDate, DateTimeOffset toDate);
 
-        double GetPaymentAmountWithinMonth(int year, int month, long customerId);
-
-        IList<PurchaseTransaction> GetAllPurchaseTransactions();
+        double GetPaymentAmount(long customerId, int year, int month);
     }
 }

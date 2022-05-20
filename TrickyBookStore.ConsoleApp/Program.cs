@@ -18,17 +18,11 @@ namespace TrickyBookStore.ConsoleApp
                     .AddService()
                 ).Build();
 
-            var logger = host.Services
-                .GetService<ILoggerFactory>()
-                .CreateLogger<Program>();
-            logger.LogDebug("Starting application");
-
             var paymentService = host.Services.GetService<IPaymentService>();
-            var res = paymentService.GetAllPurchaseTransactions();
-            
-            logger.LogDebug("All Done!");
 
-            Console.WriteLine("Hello World!");
+            var res = paymentService.GetPaymentAmount(1, 2018, 1);
+
+            Console.WriteLine($"Result: {res}");
         }
     }
 }
