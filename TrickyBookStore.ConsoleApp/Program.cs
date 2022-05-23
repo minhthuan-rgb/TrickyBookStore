@@ -11,18 +11,21 @@ namespace TrickyBookStore.ConsoleApp
     {
         static void Main(string[] args)
         {
-            using IHost host = (IHost)Host.CreateDefaultBuilder(args)
+            IHost host = (IHost)Host.CreateDefaultBuilder(args)
                 .ConfigureServices((_, services) =>
-                    services.AddLogging()
-                    .AddScoped<IPaymentService, PaymentService>()
-                    .AddService()
+                    services.AddScoped<IPaymentService, PaymentService>()
+                            .AddService()
                 ).Build();
 
             var paymentService = host.Services.GetService<IPaymentService>();
 
-            var res = paymentService.GetPaymentAmount(1, 2018, 1);
+            //var paymentAmount = paymentService.GetPaymentAmount(1, 2018, 1);
 
-            Console.WriteLine($"Result: {res}");
+            var paymentAmount = paymentService.GetPaymentAmount(1, new DateTimeOffset(new DateTime(2018, 1, 1)), new DateTimeOffset(new DateTime(2018, 2, 28)));
+
+            Console.WriteLine($"Payment Amount: {paymentAmount}");
+
+            host.Dispose();
         }
     }
 }

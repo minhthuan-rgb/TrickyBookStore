@@ -23,37 +23,48 @@ namespace TrickyBookStore.Services.Payment
 
         public double GetPaymentAmount(long customerId, DateTimeOffset fromDate, DateTimeOffset toDate)
         {
-            double paymentAmount = 0;
-            var customer = CustomerService.GetCustomerById(customerId);
-            var purchaseTransactions = PurchaseTransactionService.GetPurchaseTransactions(customerId, fromDate, toDate);
             var subscriptions = CustomerService.GetCustomerSubscriptionsById(customerId);
-            var books = PurchaseTransactionService.GetCustomerBooks(purchaseTransactions.Select(p => p.BookId).ToArray());
-            if (subscriptions.Count > 0)
+            if (fromDate.Month == toDate.Month && fromDate.Year == toDate.Year)
             {
-                foreach (var subscription in subscriptions)
-                    paymentAmount += subscription.PriceDetails["FixPrice"];
-            }
+                var purchaseTransactions = PurchaseTransactionService
+                                            .GetPurchaseTransactions(customerId, fromDate, toDate);
+                return GetPaymentAmount(customerId, purchaseTransactions);
+            }    
             else
             {
-                foreach (var book in books)
-                    if (book.IsOld)
-                        paymentAmount += (100 - (int)DiscountPercent.Free) * 1.0 / 100 * book.Price;
-                    else paymentAmount += book.Price;
-            }
+                double paymentAmount = 0;
+                paymentAmount += GetPaymentAmountFirstMonth(customerId, fromDate);
+                paymentAmount += GetPaymentAmountLastMonth(customerId, toDate);
 
-            return paymentAmount;
+                if (fromDate.Year == toDate.Year)
+                    for (int i = fromDate.Month + 1; i < toDate.Month; i++)
+                        paymentAmount += GetPaymentAmountWithinMonth(customerId, toDate.Year, i);
+                else
+                {
+                    paymentAmount += GetPaymentAmountFirstYear(customerId, fromDate);
+                    paymentAmount += GetPaymentAmountLastYear(customerId, toDate);
+                    
+                    for (int i = fromDate.Year + 1; i < toDate.Year; i++)
+                        for (int j = 1; j <= 12; j++)
+                            paymentAmount += GetPaymentAmountWithinMonth(customerId, i, j);
+                }
+                return paymentAmount;
+            }
         }
 
         public double GetPaymentAmount(long customerId, int year, int month)
         {
-            double paymentAmount = 0;
-            var customer = CustomerService.GetCustomerById(customerId);
-            var subscriptions = CustomerService.GetCustomerSubscriptionsById(customerId);
-            var purschaseTransactions = PurchaseTransactionService.GetPurchaseTransactions(customerId, year, month);
-            var books = PurchaseTransactionService.GetCustomerBooks(purschaseTransactions.Select(p => p.BookId).ToArray());
+            
+            var purchaseTransactionsWithinMonth = PurchaseTransactionService.GetPurchaseTransactions(customerId, year, month);
 
-            double oldBookDiscount = (double)DiscountPercent.Free;
-            double newBookDiscount = (double)DiscountPercent.NoDiscount;
+            return GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
+        }
+
+        private double GetPaymentAmount(long customerId, IList<PurchaseTransaction> purchaseTransactions)
+        {
+            double paymentAmount = 0;
+            var subscriptions = CustomerService.GetCustomerSubscriptionsById(customerId);
+            var books = PurchaseTransactionService.GetPurchasedBooks(purchaseTransactions.Select(p => p.BookId).ToArray());
 
             IList<Counter> counters = new List<Counter>();
             foreach (var subscription in subscriptions)
@@ -62,48 +73,97 @@ namespace TrickyBookStore.Services.Payment
                 counters.Add(new Counter
                 {
                     SubscriptionId = subscription.Id,
-                    BookCategoryId = subscription.BookCategoryId,
                     NewBookCount = 0,
                 });
             }
-
+            var bookDiscount = new Discount();
             Subscription currentSubscription = GetTopPrioritySubscription(subscriptions);
 
             if (currentSubscription != null)
-                oldBookDiscount = currentSubscription.PriceDetails["OldBook"];
-            var topOldBookDiscount = oldBookDiscount;
+                bookDiscount.OldBookPercent = currentSubscription.PriceDetails["OldBook"];
+            var topOldBookDiscount = bookDiscount.OldBookPercent;
 
             foreach (var book in books)
             {
                 if (subscriptions.FirstOrDefault(s => s.BookCategoryId == book.CategoryId) != null)
                 {
                     currentSubscription = subscriptions.First(s => s.BookCategoryId == book.CategoryId);
-                    oldBookDiscount = currentSubscription.PriceDetails["OldBook"];
+                    bookDiscount.OldBookPercent = currentSubscription.PriceDetails["OldBook"];
                 }
                 else
                 {
                     currentSubscription = GetTopPrioritySubscription(subscriptions);
-                    oldBookDiscount = topOldBookDiscount;
+                    bookDiscount.OldBookPercent = topOldBookDiscount;
                 }
 
                 if (currentSubscription != null)
-                    newBookDiscount = currentSubscription.PriceDetails["NewBook"];
+                    bookDiscount.NewBookPercent = currentSubscription.PriceDetails["NewBook"];
 
                 if (book.IsOld)
-                    paymentAmount += (100 - oldBookDiscount) / 100 * book.Price;
+                    paymentAmount += (100 - bookDiscount.OldBookPercent) / 100 * book.Price;
                 else
                 {
-                    paymentAmount += (100 - newBookDiscount) / 100 * book.Price;
-                    if (subscriptions.Count > 0 && ++counters.First(c => c.SubscriptionId == currentSubscription.Id).NewBookCount % 3 == 0)
+                    paymentAmount += (100 - bookDiscount.NewBookPercent) / 100 * book.Price;
+                    if (subscriptions.Count > 0 && ++counters.First(c => c.SubscriptionId == currentSubscription.Id).NewBookCount == 3)
                     {
                         subscriptions.Remove(currentSubscription);
                         if (subscriptions.Count == 0)
-                            newBookDiscount = (double)DiscountPercent.NoDiscount;
+                            bookDiscount.NewBookPercent = (double)DiscountPercent.NoDiscount;
                     }
-                } 
+                }
             }
 
             return paymentAmount;
+        }
+
+        private double GetPaymentAmountFirstMonth(long customerId, DateTimeOffset fromDate)
+        {
+            var purchaseTransactionsFirstMonth = PurchaseTransactionService 
+                                                    .GetPurchaseTransactions(customerId, fromDate,
+                                                                                new DateTimeOffset(new DateTime(fromDate.Year, fromDate.Month, 1).AddMonths(1).AddDays(-1)));
+            return GetPaymentAmount(customerId, purchaseTransactionsFirstMonth);
+        }
+
+        private double GetPaymentAmountLastMonth(long customerId, DateTimeOffset toDate)
+        {
+            var purchaseTransactionsLastMonth = PurchaseTransactionService
+                                                    .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(toDate.Year, toDate.Month, 1)), toDate);
+            return GetPaymentAmount(customerId, purchaseTransactionsLastMonth);
+        }
+
+        private double GetPaymentAmountFirstYear(long customerId, DateTimeOffset fromDate)
+        {
+            double paymentAmount = 0;
+            for (int i = fromDate.Month + 1; i <= 12; i++)
+            {
+                var purchaseTransactionsWithinMonth = PurchaseTransactionService
+                                                        .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(fromDate.Year, i, 1)),
+                                                                                    new DateTimeOffset(new DateTime(fromDate.Year, i, 1).AddMonths(1).AddDays(-1)));
+                paymentAmount += GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
+            }
+
+            return paymentAmount;
+        }
+
+        private double GetPaymentAmountLastYear(long customerId, DateTimeOffset toDate)
+        {
+            double paymentAmount = 0;
+            for (int i = 1; i < toDate.Month; i++)
+            {
+                var purchaseTransactionsWithinMonth = PurchaseTransactionService
+                                                        .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(toDate.Year, i, 1)),
+                                                                                    new DateTimeOffset(new DateTime(toDate.Year, i, 1).AddMonths(1).AddDays(-1)));
+                paymentAmount += GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
+            }
+            return paymentAmount;
+        }
+
+        private double GetPaymentAmountWithinMonth(long customerId, int year, int month)
+        {
+            var purchaseTransactionsWithinMonth = PurchaseTransactionService
+                                                                .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(year, month, 1)),
+                                                                                            new DateTimeOffset(new DateTime(year, month, 1).AddMonths(1).AddDays(-1)));
+            return GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
         }
 
         private Subscription GetTopPrioritySubscription(IList<Subscription> subscriptions)

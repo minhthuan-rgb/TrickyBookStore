@@ -9,7 +9,6 @@ namespace TrickyBookStore.Services.Models
     public class Counter
     {
         public int SubscriptionId { get; set; }
-        public int? BookCategoryId { get; set; }
         public int NewBookCount { get; set; }
     }
 }

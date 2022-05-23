@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TrickyBookStore.Services.Books;
 using TrickyBookStore.Services.Customers;
+using TrickyBookStore.Services.Payment;
 using TrickyBookStore.Services.PurchaseTransactions;
 using TrickyBookStore.Services.Subscriptions;
 

@@ -19,17 +19,17 @@ namespace TrickyBookStore.Services.PurchaseTransactions
         {
             return Store.PurchaseTransactions.Data.Where(p => p.CustomerId.Equals(customerId) && 
                                                                                             p.CreatedDate >= fromDate &&
-                                                                                            p.CreatedDate <= toDate).Select(p => p).ToList();
+                                                                                            p.CreatedDate <= toDate).OrderBy(p => p.CreatedDate).ToList();
         }
 
         public IList<PurchaseTransaction> GetPurchaseTransactions(long customerId, int year, int month)
         {
             return (IList<PurchaseTransaction>)Store.PurchaseTransactions.Data.Where(p => p.CustomerId.Equals(customerId) &&
                                                                                             p.CreatedDate.Month.Equals(month) &&
-                                                                                            p.CreatedDate.Year.Equals(year)).ToList();
+                                                                                            p.CreatedDate.Year.Equals(year)).OrderBy(p => p.CreatedDate).ToList();
         }
 
-        public IList<Book> GetCustomerBooks (params long[] ids)
+        public IList<Book> GetPurchasedBooks (params long[] ids)
         {
             return BookService.GetBooks(ids);
         }

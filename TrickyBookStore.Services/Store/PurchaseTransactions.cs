@@ -88,6 +88,10 @@ namespace TrickyBookStore.Services.Store
             new PurchaseTransaction { Id = 76, CustomerId = 5, BookId = 14, CreatedDate = new DateTimeOffset(new DateTime(2018, 3, 26)) },
             new PurchaseTransaction { Id = 77, CustomerId = 5, BookId = 15, CreatedDate = new DateTimeOffset(new DateTime(2018, 3, 27)) },
             new PurchaseTransaction { Id = 78, CustomerId = 5, BookId = 16, CreatedDate = new DateTimeOffset(new DateTime(2018, 3, 28)) },
+            new PurchaseTransaction { Id = 79, CustomerId = 1, BookId = 10, CreatedDate = new DateTimeOffset(new DateTime(2019, 2, 25)) },
+            new PurchaseTransaction { Id = 80, CustomerId = 1, BookId = 11, CreatedDate = new DateTimeOffset(new DateTime(2019, 2, 10)) },
+            new PurchaseTransaction { Id = 81, CustomerId = 1, BookId = 12, CreatedDate = new DateTimeOffset(new DateTime(2019, 2, 20)) },
+            new PurchaseTransaction { Id = 82, CustomerId = 1, BookId = 13, CreatedDate = new DateTimeOffset(new DateTime(2019, 2, 21)) },
         };
     }
 }

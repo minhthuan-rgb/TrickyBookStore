@@ -12,6 +12,6 @@ namespace TrickyBookStore.Services.PurchaseTransactions
 
         IList<PurchaseTransaction> GetPurchaseTransactions(long customerId, int year, int month);
 
-        IList<Book> GetCustomerBooks(params long[] ids);
+        IList<Book> GetPurchasedBooks(params long[] ids);
     }
 }
