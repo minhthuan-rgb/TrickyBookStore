@@ -74,6 +74,7 @@
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="DI Services\ServiceCollectionExtensions.cs" />
     <Compile Include="Enums\DiscountPercent.cs" />
+    <Compile Include="Enums\PriceDetailKey.cs" />
     <Compile Include="Enums\SubscriptionPrice.cs" />
     <Compile Include="Enums\SubscriptionPriority.cs" />
     <Compile Include="Models\Counter.cs" />

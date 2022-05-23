@@ -18,12 +18,18 @@ namespace TrickyBookStore.ConsoleApp
                 ).Build();
 
             var paymentService = host.Services.GetService<IPaymentService>();
+            try
+            {
+                //var paymentAmount = paymentService.GetPaymentAmount(1, 2018, 1);
 
-            //var paymentAmount = paymentService.GetPaymentAmount(1, 2018, 1);
+                var paymentAmount = paymentService.GetPaymentAmount(100, new DateTimeOffset(new DateTime(2018, 1, 1)), new DateTimeOffset(new DateTime(2019, 2, 28)));
 
-            var paymentAmount = paymentService.GetPaymentAmount(1, new DateTimeOffset(new DateTime(2018, 1, 1)), new DateTimeOffset(new DateTime(2019, 2, 28)));
-
-            Console.WriteLine($"Payment Amount: {paymentAmount}");
+                Console.WriteLine($"Payment Amount: {paymentAmount}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             host.Dispose();
         }

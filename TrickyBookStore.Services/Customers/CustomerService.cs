@@ -22,6 +22,9 @@ namespace TrickyBookStore.Services.Customers
 
         public IList<Subscription> GetCustomerSubscriptionsById(long id)
         {
+            var customer = GetCustomerById(id);
+            if (customer == null)
+                throw new Exception("This Customer Not Exists!");
             return SubscriptionService.GetSubscriptions(GetCustomerById(id).SubscriptionIds.ToArray());
         }
     }
