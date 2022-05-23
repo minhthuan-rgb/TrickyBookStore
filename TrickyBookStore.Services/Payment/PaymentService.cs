@@ -136,12 +136,8 @@ namespace TrickyBookStore.Services.Payment
             double paymentAmount = 0;
             for (int i = fromDate.Month + 1; i <= 12; i++)
             {
-                var purchaseTransactionsWithinMonth = PurchaseTransactionService
-                                                        .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(fromDate.Year, i, 1)),
-                                                                                    new DateTimeOffset(new DateTime(fromDate.Year, i, 1).AddMonths(1).AddDays(-1)));
-                paymentAmount += GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
+                paymentAmount += GetPaymentAmountWithinMonth(customerId, fromDate.Year, i);
             }
-
             return paymentAmount;
         }
 
@@ -150,10 +146,7 @@ namespace TrickyBookStore.Services.Payment
             double paymentAmount = 0;
             for (int i = 1; i < toDate.Month; i++)
             {
-                var purchaseTransactionsWithinMonth = PurchaseTransactionService
-                                                        .GetPurchaseTransactions(customerId, new DateTimeOffset(new DateTime(toDate.Year, i, 1)),
-                                                                                    new DateTimeOffset(new DateTime(toDate.Year, i, 1).AddMonths(1).AddDays(-1)));
-                paymentAmount += GetPaymentAmount(customerId, purchaseTransactionsWithinMonth);
+                paymentAmount += GetPaymentAmountWithinMonth(customerId, toDate.Year, i);
             }
             return paymentAmount;
         }
