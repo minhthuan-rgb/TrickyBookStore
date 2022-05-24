@@ -11,6 +11,7 @@ namespace TrickyBookStore.Services.DI_Services
     {
         public static void AddService(this IServiceCollection services)
         {
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IPurchaseTransactionService, PurchaseTransactionService>();

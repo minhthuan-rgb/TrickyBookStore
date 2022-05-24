@@ -8,7 +8,7 @@ namespace TrickyBookStore.Services.Books
     {
         public IList<Book> GetBooks(params long[] ids)
         {
-            return Store.Books.Data.Where(b => ids.Contains(b.Id)).Select(b => b).ToList();
+            return Store.Books.Data.Where(b => ids.Contains(b.Id)).ToList();
         }
     }
 }

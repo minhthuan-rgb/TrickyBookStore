@@ -8,7 +8,7 @@ namespace TrickyBookStore.Services.Subscriptions
     {
         public IList<Subscription> GetSubscriptions(params int[] ids)
         {
-            return Store.Subscriptions.Data.Where(s => ids.Contains(s.Id)).Select(s => s).ToList();
+            return Store.Subscriptions.Data.Where(s => ids.Contains(s.Id)).ToList();
         }
     }
 }
