@@ -104,7 +104,7 @@ namespace TrickyBookStore.Services.Payment
                 else
                 {
                     paymentAmount += (100 - bookDiscount.NewBookPercent) / 100 * book.Price;
-                    if (subscriptions.Count > 0 && ++counters.First(c => c.SubscriptionId == currentSubscription.Id).NewBookCount == 3)
+                    if (subscriptions.Count > 0 && ++counters.First(c => c.SubscriptionId == currentSubscription.Id).NewBookCount == currentSubscription.PriceDetails[PriceDetailKey.NewBookCount])
                     {
                         subscriptions.Remove(currentSubscription);
                         if (subscriptions.Count == 0)

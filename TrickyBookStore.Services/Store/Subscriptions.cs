@@ -20,8 +20,9 @@ namespace TrickyBookStore.Services.Store
                 PriceDetails = new Dictionary<string, double>
                 {
                     { PriceDetailKey.FixPrice, SubscriptionPrice.Paid },
-                    { PriceDetailKey.OldBook, (double)DiscountPercent.Paid },
-                    { PriceDetailKey.NewBook, (double)DiscountPercent.Paid },
+                    { PriceDetailKey.OldBook, (double)DiscountPercent.PaidOldBook },
+                    { PriceDetailKey.NewBook, (double)DiscountPercent.PaidNewBook },
+                    { PriceDetailKey.NewBookCount, 3 },
                 }
             },
             new Subscription { Id = 3, SubscriptionType = SubscriptionTypes.Premium, Priority = (int)SubscriptionPriority.Premium,
@@ -30,6 +31,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.Premium },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.Premium },
+                    { PriceDetailKey.NewBookCount, 3 },
                 }
             },
             new Subscription { Id = 4, SubscriptionType = SubscriptionTypes.CategoryAddicted, Priority = (int)SubscriptionPriority.CategoryAddicted,
@@ -38,6 +40,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 1
             },
@@ -47,6 +50,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 2
             },
@@ -56,6 +60,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 3
             },
@@ -65,6 +70,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 4
             },
@@ -74,6 +80,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 5
             },
@@ -83,6 +90,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 6
             },
@@ -92,6 +100,7 @@ namespace TrickyBookStore.Services.Store
                     { PriceDetailKey.FixPrice, SubscriptionPrice.CategoryAddicted },
                     { PriceDetailKey.OldBook, (double)DiscountPercent.FreeOfCharge },
                     { PriceDetailKey.NewBook, (double)DiscountPercent.CategoryAddicted },
+                    { PriceDetailKey.NewBookCount, 3 },
                 },
                 BookCategoryId = 7
             }

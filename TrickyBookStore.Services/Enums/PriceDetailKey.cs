@@ -11,5 +11,6 @@ namespace TrickyBookStore.Services.Enums
         public static readonly string FixPrice = "FixPrice";
         public static readonly string OldBook = "OldBook";
         public static readonly string NewBook = "NewBook";
+        public static readonly string NewBookCount = "NewBookCount";
     }
 }

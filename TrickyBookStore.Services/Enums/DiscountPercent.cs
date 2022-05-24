@@ -10,7 +10,8 @@ namespace TrickyBookStore.Services.Enums
     {
         Premium = 15,
         CategoryAddicted = 15,
-        Paid = 5,
+        PaidOldBook = 95,
+        PaidNewBook = 5,
         Free = 10,
         NoDiscount = 0,
         FreeOfCharge = 100
